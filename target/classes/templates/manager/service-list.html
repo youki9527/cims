@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>服务经理列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/css/font1.css">
+    <link rel="stylesheet" href="/css/xadmin1.css">
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css" media="all">
+    <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/xadmin1.js"></script>
+</head>
+
+<body>
+<!--<div class="x-nav">-->
+<!--            <span class="layui-breadcrumb">-->
+<!--                <a href="">首页</a>-->
+<!--                <a href="">服务记录管理</a>-->
+<!--                <a>-->
+<!--                    <cite>服务记录列表</cite>-->
+<!--                </a>-->
+<!--            </span>-->
+<!--    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"-->
+<!--       onclick="location.reload()" title="刷新">-->
+<!--        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>-->
+<!--    </a>-->
+<!--</div>-->
+<div class="layui-fluid">
+    <input type="hidden" id="TypeDate" th:value="${SType}">
+    <input type="hidden" id="idOrNameDate" th:value="${idOrName}">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5" action="/serviceInfoManage/serviceList" id="myForm">
+
+                        <div class="layui-input-inline layui-show-xs-block">
+                            <input class="layui-input" placeholder="开始日" name="startDay" id="startDay"
+                                   th:value="${startDay}">
+                        </div>
+                        <div class="layui-input-inline layui-show-xs-block">
+                            <input class="layui-input" placeholder="截止日" name="endDay" id="endDay" th:value="${endDay}">
+                        </div>
+                        <div class="layui-input-inline layui-show-xs-block">
+                            <select id="SType"   name="SType" class="valid">
+                                <option value="">服务类型</option>
+                                <option   value="上门服务">上门服务</option>
+                                <option   value="解决客户投诉">解决客户投诉</option>
+                                <option  value="客户培训">客户培训</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline layui-show-xs-block">
+                            <select id="idOrName" name="idOrName" class="valid">
+                                <option value="">请下拉选择按服务编号还是客户姓名</option>
+                                <option value="1">服务编号</option>
+                                <option value="2">客户姓名</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline layui-show-xs-block">
+                            <input type="text" name="SIdOrUserName" placeholder="请输入服务编号或客户姓名" autocomplete="off"
+                                   th:value="${SIdOrUserName}" class="layui-input"></div>
+                        <div class="layui-input-inline layui-show-xs-block">
+                                <button class="layui-btn" type="button"  onclick="search()">
+                                <i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-header">
+                    <button class="layui-btn" onclick="xadmin.open('添加服务记录','/serviceInfoManage/serviceAdd',500,600)">
+                        <i class="layui-icon"></i>添加
+                    </button>
+                    <button class="layui-btn" onclick="serviceExportExcl()">
+                        <i class="layui-icon"></i>导出excel
+                    </button>
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form">
+                        <thead>
+                        <tr>
+                            <th>服务编号</th>
+                            <th>服务类型</th>
+                            <th>客户名称</th>
+                            <th>联系人</th>
+                            <th>服务预估成本</th>
+                            <th>服务日期</th>
+                            <th>服务时间</th>
+                            <th>服务内容描述</th>
+                            <th>客户反馈意见</th>
+                            <th>客户满意度</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="i:${info.list}">
+                            <td th:text="${i.SId}"></td>
+                            <td th:text="${i.SType}"></td>
+                            <td th:text="${i.SUserName}"></td>
+                            <td th:text="${i.SManagerName}"></td>
+                            <td th:text="${i.SCost}"></td>
+                            <td th:text="${i.SDate}"></td>
+                            <td th:text="${i.STime}"></td>
+                            <td th:text="${i.SContent}"></td>
+                            <td th:text="${i.SFback}"></td>
+                            <td th:text="${i.SGrade}"></td>
+                            <td class="td-manage">
+                                <a title="修改" th:onclick="xadmin.open('修改','/serviceInfoManage/serviceUpdate?SId='+[[${i.SId}]],500,600)"
+                                   >
+                                    <i class="layui-icon">&#xe63c;</i>
+                                </a>
+                                <a title="删除" th:onclick="member_del(this,[[${i.SId}]])" href="javascript:;">
+                                    <i class="layui-icon">&#xe640;</i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layui-card-body ">
+                    <div class="page">
+                        <div>
+                            <a class="prev" th:href="@{/serviceInfoManage/serviceList(startDay=${startDay},endDay=${endDay},SType=${SType},idOrName=${idOrName},
+                            SIdOrUserName=${SIdOrUserName},page=${info.pre})}"><<</a>
+                            <span class="current" th:text="${info.cur}"></span>
+                            <a class="next" th:href="@{/serviceInfoManage/serviceList(startDay=${startDay},endDay=${endDay},SType=${SType},idOrName=${idOrName},
+                            SIdOrUserName=${SIdOrUserName},page=${info.next})}">>></a>
+                            一共有<span th:text="${info.total}"></span>条数据
+                            一共有<span th:text="${info.totalPage}"></span>页
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+
+    $(function () {
+        //回显服务类型select选中的值
+        var type=$("#TypeDate").val();
+        $('#SType').val(type);
+
+        //回显服务类型select选中的值
+        var type=$("#idOrNameDate").val();
+        $('#idOrName').val(type);
+    })
+
+</script>
+<script>
+
+    //设置用户填写日期和时间样式
+    layui.use('laydate', function () {
+        var laydate1 = layui.laydate;
+        var laydate2 = layui.laydate;
+        //执行一个laydate实例
+        laydate1.render({
+            elem: '#startDay' //指定元素
+        });
+        laydate2.render({
+            elem: '#endDay',//指定元素
+        });
+    });
+
+    layui.use(['form', 'upload', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+    })
+
+    //搜索查询
+    function search(data) {
+        //获取用户输入的查询条件
+        var idOrName = $("#idOrName").val();
+        //获取用户选择的查询
+        var SIdOrUserName = $("#SIdOrUserName").val();
+        //按开始截止日期和服务类型
+        if (idOrName == "") {
+            document.getElementById("myForm").submit();
+        }
+        //按服务编号或客户姓名
+        else {
+            //按服务编号
+            if (idOrName == "1") {
+                document.getElementById("myForm").submit();
+                //创建一个正则表达式对象
+                var re = /^[0-9]*$/;
+                //验证用户输入的信息是否为数字
+                if (re.test(SIdOrUserName)) {
+                    document.getElementById("myForm").submit();
+                } else {
+                    layer.alert("请输入数字")
+                }
+            }
+            //按客户姓名
+            else {
+                document.getElementById("myForm").submit();
+            }
+        }
+    }
+
+    /*单个服务记录删除*/
+    function member_del(obj, SId) {
+        layer.confirm('确认要删除吗？', function (index) {
+            console.log(SId);
+            console.log(obj);
+            $.ajax({
+                url: "/serviceInfoManage/del",
+                type: "post",
+                data: {
+                    "SId": SId
+                },
+                dataType: "json",//返回的数据类型
+                success: function (data) {
+                    console.log(data);
+                    if (data.info == "删除成功") {
+                        //发异步删除数据
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!', {
+                            icon: 1,
+                            time: 1000
+                        });
+                    } else {
+                        layer.msg('删除失败', {
+                            icon: 1,
+                            time: 1000
+                        });
+                    }
+
+                }
+            })
+        })
+    }
+
+    /*导出excel*/
+    function serviceExportExcl() {
+        document.location.href = "/serviceInfoManage/exportServiceInfo";
+    }
+</script>

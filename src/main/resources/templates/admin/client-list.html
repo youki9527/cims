@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>客户信息列表详情</title>
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/xadmin.js"></script>
+</head>
+<body>
+
+<div id="kehu">
+    <div >
+        <table>
+            <tr>
+                <td>
+                    <form class="x-so" style="margin-top:20px;margin-left: 380px" action="/client/list">
+                        <select id="condition" name="condition"  style="width: 100px;height: 37px">
+                            <option value="----">----</option>
+                            <option value="客户编号">客户编号</option>
+                            <option value="客户名">客户名</option>
+                        </select>
+                        <input class="layui-input" name="conValue" th:value="${vv}" type="text" placeholder="请输入查询条件">
+                        <input type="submit" class="layui-btn layui-btn-normal" style="margin-left: 10px" value="查询" >
+                        <button class="layui-btn " style="margin-left: 10px" type="button" onclick="create()"><i class="layui-icon">&#xe608;</i>新增</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/manager/excelWrite" >
+                        <button class="layui-btn layui-btn-warm" type="submit" style="margin-left: 10px;margin-top: 2px"><i class="layui-icon">&#xe601;</i>excel导出</button>
+                        <button class="layui-btn " style="margin-left: 10px;margin-top: 2px" type="button" onclick="zhufu()"><i class="layui-icon">&#xe606;</i>今日生日客户</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <table  class="layui-table">
+            <thead>
+            <th>客户编号</th>
+            <th>客户名</th>
+            <th>客户照片</th>
+            <th>性别</th>
+            <th>生日</th>
+            <th>电话</th>
+            <th>邮箱</th>
+            <th>学历</th>
+            <th>身份证号</th>
+            <th>备注</th>
+            <th>操作</th>
+            </thead>
+            <tbody>
+            <tr th:each="i:${clientInfo.clientList}">
+                <td th:text="${i.CId}"></td>
+                <td th:text="${i.CName}"></td>
+                <td><img th:src="${i.CPic}" width="80" height="90"></td>
+                <td th:text="${i.CSex}"></td>
+                <td th:text="${i.CBirth}"></td>
+                <td th:text="${i.CTel}"></td>
+                <td th:text="${i.CEmail}"></td>
+                <td th:text="${i.CDegree}"></td>
+                <td th:text="${i.CNo}"></td>
+                <td th:text="${i.CAdd}"></td>
+                <td>
+                    <button class="layui-btn layui-btn-normal" type="button" onclick="update(this)"><i class="layui-icon">&#xe642;</i>修改</button>
+                    <button class="layui-btn layui-btn-danger" type="button" onclick="del(this)"><i class="layui-icon">&#xe640;</i>删除</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <div style="position: absolute;left: 40%;margin-top: 20px">
+        <a class="layui-btn layui-btn-sm layui-btn-primary" th:href="@{/client/list(page=${clientInfo.clientPre})}" ><i class="layui-icon">&#xe603;</i>上一页</a>
+        <a class="layui-btn layui-btn-sm layui-btn-primary" th:href="@{/client/list(page=${clientInfo.clientNext})}" ><i class="layui-icon">&#xe602;</i>下一页</a>
+        一共有<span th:text="${clientInfo.clientTotal}"></span>条数据
+        一共有<span th:text="${clientInfo.clientTotalPage}"></span>页
+        当前第<span th:text="${clientInfo.clientCur}"></span>页
+    </div>
+</div>
+
+</body>
+</html>
+
+<script>
+    //打开修改页面的方法
+    function update(obj){
+        //获取当前选中行的CId值
+        var id = $(obj).parent().parent().find("td").eq(0).text();
+        //打开修改弹窗
+        x_admin_show("修改","/client/editPage?CId="+id,500,600);
+
+    }
+
+    //打开生日祝福页面
+    function zhufu(){
+        window.location.href="/client/zhufu";
+    }
+
+    //新增
+    function create(){
+        //打开修改弹窗
+        x_admin_show("新增","/client/addPage",500,600);
+
+    }
+
+    //删除
+    function del(obj){
+        //获取当前选中行的CId值
+        var id = $(obj).parent().parent().find("td").eq(0).text();
+        //用提示框确定用户是否删除
+        layer.confirm("你确定要删除吗?",{icon:3,title:"警告"},function(index){
+            $.ajax({
+                url:"/client/delCMname",
+                type:"get",
+                data:{"CId":id},
+                dataType:"json",
+                success:function(data){
+                    layer.alert(data.info,function(){
+                        parent.window.location.href=parent.window.location.href;
+                    })
+                    /*          if(data.info=="删除成功"){
+                                  // 第一种：刷新
+                                  //parent.window.location.href=parent.window.location.href;
+                                  //第二种：刷新
+                                  $(obj).parent().parent().remove();
+                              }*/
+                    //关闭
+                    layer.close(index);
+                }
+            })
+
+        })
+    }
+
+</script>

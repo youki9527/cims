@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>客户经理信息列表</title>
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/xadmin.js"></script>
+</head>
+<body>
+<input type="hidden" id="conditionData" th:value="${condition}">
+<form class="x-so" action="/manager/list" id="myform">
+    <select id="condition" name="condition" style="width: 100px;height: 37px">
+        <option value="">----</option>
+        <option value="编号">编号</option>
+        <option value="经理名">经理名</option>
+    </select>
+    <input class="layui-input" name="conValue" id="conValue" th:value="${conValue}" type="text" placeholder="请输入查询条件">
+    <input type="button" class="layui-btn" onclick="search()" value="查询">
+</form>
+
+<form action="excelWrite">
+    <button class="layui-btn layui-btn-radius" onclick="x_admin_show('添加用户','/manager/add',500,600)" type="button"><i class="layui-icon"></i>添加</button>
+    <button class="layui-btn layui-btn-radius" type="submit"><i class="layui-icon "></i>excel导出</button>
+</form>
+
+    <table class="layui-table">
+        <thead>
+            <th>编号</th>
+            <th>姓名</th>
+            <th>照片</th>
+            <th>性别</th>
+            <th>出生日期</th>
+            <th>联系电话</th>
+            <th>邮箱地址</th>
+            <th>学历</th>
+            <th>身份证号码</th>
+            <th>备注</th>
+            <th>操作</th>
+        </thead>
+
+        <tbody>
+        <tr th:each="i:${info.list }">
+            <td th:text = "${i.MId}"></td>
+            <td th:text = "${i.MName}"></td>
+                <td>
+                    <img id="photo" th:src="${i.MPic}" width="40px" height="50px">
+                </td>
+                <td th:text = "${i.MSex}"></td>
+                <td th:text = "${i.MBirth}"></td>
+                <td th:text = "${i.MTel}"></td>
+                <td th:text = "${i.MEmail}"></td>
+                <td th:text = "${i.MDegree}"></td>
+                <td th:text = "${i.MNo}"></td>
+                <td th:text = "${i.MRemark}"></td>
+                <td>
+                    <button class="layui-btn layui-btn-normal" type="button" onclick="update(this)"><i class="layui-icon">&#xe642;</i>修改</button>
+                    <button class="layui-btn layui-btn-danger" type="button" onclick="delUser(this)"><i class="layui-icon">&#xe640;</i>删除</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+<div style="text-align: center;">
+
+    <a class="layui-btn" th:href="@{/manager/list(page=${info.pre},conValue=${conValue},condition=${condition})}">上一页</a>
+    共<span th:text="${info.totalPage}"></span>页
+    当前为第<span th:text="${info.cur}"></span>页
+    <a class="layui-btn" th:href="@{/manager/list(page=${info.next},conValue=${conValue},condition=${condition})}">下一页</a>
+</div>
+<div style="text-align: center;">
+    一共有<span th:text="${info.total}"></span>数据
+</div>
+</body>
+</html>
+<script>
+    $(function () {
+
+        //回显查条件select选中的值
+        var conditionData=$("#conditionData").val();
+        $('#condition').val(conditionData);
+
+    })
+
+</script>
+<script>
+
+    //打开修改页面
+    function  update(obj) {
+        var id = $(obj).parent().parent().find("td").eq(0).text();
+        x_admin_show("修改","/manager/editPage?MId="+id,500,600);
+    }
+
+    //删除
+    function delUser(obj) {
+        //获取当前选中行的MId值
+        var id=$(obj).parent().parent().find("td").eq(0).text();
+        //用提示框确定用户是否删除
+        layer.confirm("你确定要删除吗？",{icon:3,title:"警告"},function (index) {
+            $.ajax({
+                url:"/manager/del",
+                type:"get",
+                data: {"MId":id},
+                dataType:"json",//返回的数据类型
+                success:function (data){
+                    layer.alert(data.info)
+                    if (data.info == "删除成功"){
+                        //刷新
+                        //parent.window.location.href=parent.window.location.href;
+                        //第二种刷新
+                        $(obj).parent().parent().remove();
+                    }
+                }
+            })
+        })
+    }
+    //查询验证
+    function search(){
+        //获取用户输入的查询条件
+        var v = $("#conValue").val();
+        //获取用户选择的查询
+        var con = $("#condition").val();
+        //判断用户选择的查询条件
+        if(con=="编号"){
+            //创建一个正则表达式对象
+            var re = /^[0-9]*$/;
+            //验证用户输入的信息是否是数字
+            if(re.test(v)){
+                //用js做表单提交
+                document.getElementById("myform").submit();
+            }else{
+                layer.alert("请输入数字")
+            }
+
+
+        }else{
+            //用js做表单提交
+            document.getElementById("myform").submit();
+        }
+    }
+</script>

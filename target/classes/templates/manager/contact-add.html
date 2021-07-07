@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>联系人添加</title>
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/xadmin.js"></script>
+</head>
+<body>
+<div class="x-body">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label for="CName" class="layui-form-label">
+                <span class="x-red">*</span>客户姓名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="CName" name="CName" required="" lay-verify="required"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>填写客户真实姓名
+            </div>
+        </div>
+        <div class="layui-form-item">
+<!--            <label for="CSex" class="layui-form-label">-->
+<!--                <span class="x-red">*</span>性别-->
+<!--            </label>-->
+<!--            <div class="layui-input-inline">-->
+<!--                <input type="text" id="CSex" name="CSex" required="" lay-verify="required"-->
+<!--                       autocomplete="off" class="layui-input">-->
+<!--            </div>-->
+
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline" id="MSex" name="MSex">
+                    <input type="radio" name="CSex" value="男"  title="男"  checked=""/>
+                    <input type="radio" name="CSex" value="女" title="女" />
+                </div>
+
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="CBirth" class="layui-form-label">
+                <span class="x-red">*</span>生日
+            </label>
+            <div class="layui-input-inline">
+                <input type="date" id="CBirth"  name="CBirth" required="" lay-verify="CBirth"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="CTel" class="layui-form-label">
+                <span class="x-red">*</span>手机
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="CTel" name="CTel" required="" lay-verify="phone"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>请输入有效手机号
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="CEmail" class="layui-form-label">
+                <span class="x-red">*</span>邮箱
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="CEmail" name="CEmail" required="" lay-verify="email"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="CAdd" class="layui-form-label">
+                <span class="x-red">*</span>地址
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="CAdd" name="CAdd" required=""
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="CMid" class="layui-form-label">
+                <span class="x-red">*</span>负责人ID
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="CMid" name="CMid" required="" disabled th:value="${session.manager.MId}"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>负责该客户的客户经理ID
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button  class="layui-btn" lay-filter="add" lay-submit="">
+                保存
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form
+            ,layer = layui.layer;
+
+
+        form.on('submit(add)',function (data) {
+            $.ajax({
+                url:"/contact/saveAdd",
+                async: false,
+                type:"POST",
+                dataType: "json",
+                data:data.field,
+                success:function (data) {
+                    //定义{info:"新增成功"}
+                    $("#info").text(data.info);
+                    if (data.info =="新增成功"){
+                        layer.alert("增加成功",{icon:6},
+                            function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                            //刷新
+                            parent.window.location.replace("/contact/list")
+                        })
+                    }else {
+                        layer.msg("增加失败！",{icon:6,time:1000});
+                    }
+                }
+            })
+            return false;
+        })
+    });
+
+</script>
+</body>
+</html>

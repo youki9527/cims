@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>修改服务记录页面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi">
+    <link rel="stylesheet" href="/css/font1.css">
+    <link rel="stylesheet" href="/css/xadmin1.css">
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css" media="all">
+    <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/xadmin1.js"></script>
+
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form class="layui-form">
+            <!-- 将model中的需要在js中引用的数据放在这上hidden的input中          -->
+            <input type="hidden" id="SId" th:value=${serviceInfo.SId}>
+            <input type="hidden" id="userIdData" th:value=${serviceInfo.SUserId} >
+            <input type="hidden" id="Type" th:value=${serviceInfo.SType} >
+            <div class="layui-form-item">
+                <label for="SUserName" class="layui-form-label">
+                    <span class="x-red">*</span>客户名称</label>
+                <div class="layui-input-inline" >
+<!--                    <select id="SUserName" name="SUserName" lay-verify="required" lay-filter="SUserName"  autocomplete="off" lay-search>-->
+<!--                    </select>-->
+                    <input  id="SUserName" name="SUserName" type="text" th:value=${serviceInfo.SUserName} disabled class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SUserId" class="layui-form-label">
+                    <span class="x-red">*</span>客户编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SUserId" name="SUserId" disabled required="" lay-verify="required"
+                           th:value=${serviceInfo.SUserId}  autocomplete="off" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SDate" class="layui-form-label">
+                    <span class="x-red">*</span>服务日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SDate" name="SDate" required="" lay-verify="SDate" autocomplete="off"
+                           th:value="${serviceInfo.SDate}"    class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SCost" class="layui-form-label">
+                    <span class="x-red">*</span>服务时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="STime" name="STime" required="" lay-verify="STime" autocomplete="off"
+                           th:value="${serviceInfo.STime}"  class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SManagerName" class="layui-form-label">
+                    <span class="x-red">*</span>经理名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SManagerName" name="SManagerName" disabled required="" lay-verify="required"
+                           th:value="${serviceInfo.SManagerName}"     autocomplete="off" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SManagerId" class="layui-form-label">
+                    <span class="x-red">*</span>经理编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SManagerId" name="SManagerId" disabled required="" lay-verify="required"
+                           th:value="${serviceInfo.SManagerId}" autocomplete="off" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SType" class="layui-form-label">
+                    <span class="x-red">*</span>服务类型</label>
+                <div class="layui-input-inline">
+                    <select id="SType" name="SType" class="valid" >
+                        <option value="上门服务">上门服务</option>
+                        <option value="解决客户投诉">解决客户投诉</option>
+                        <option value="客户培训">客户培训</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SCost" class="layui-form-label">
+                    <span class="x-red">*</span>服务预估成本</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SCost" name="SCost" required="" lay-verify="SCost" autocomplete="off"
+                           th:value="${serviceInfo.SCost}"    class="layui-input"></div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label for="SContent" class="layui-form-label">服务内容描述</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容最多300字哦" id="SContent" name="SContent" class="layui-textarea" maxlength="300"
+                              required="" lay-verify="SContent" autocomplete="off"      th:text="${serviceInfo.SContent}"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="add" class="layui-form-label"></label>
+                <button class="layui-btn" id="add" lay-filter="update" lay-submit="">修改</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript"  >
+
+    //设置用户填写日期和时间样式
+    layui.use('laydate', function () {
+        var laydate1 = layui.laydate;
+        var laydate2 = layui.laydate;
+        //执行一个laydate实例
+        laydate1.render({
+            elem: '#SDate' //指定元素
+        });
+        laydate2.render({
+            elem: '#STime',//指定元素
+            type: 'time',
+        });
+    });
+
+
+    layui.use(['form', 'upload', 'layer'], function () {
+
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+
+        //初始化修改服务记录页面
+        $.ajax({
+            url: "/serviceInfoManage/addInitialize",
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                //加载经理信息
+                document.getElementById("SManagerName").value = data.managerInfo.mname;
+                document.getElementById("SManagerId").value = data.managerInfo.mid;
+                // //加载经理负责客户信息
+                // $.each(data.clientInfoList, function (index, value) {
+                //     $('#SUserName').append(new Option(value.cname,value.cid));// 下拉菜单里第一个为text 第二个为value
+                // });
+                //
+                // //select框的值取决于选中的option的value值 而不是text值
+                // //回显客户姓名select选中的值，值为客户id，text为客户姓名
+                // var userId=$("#userIdData").val();
+                // $('#SUserName').val(userId);
+                //
+                //回显服务类型select选中的值
+                var type=$("#Type").val();
+                $('#SType').val(type);
+
+                layui.form.render("select");//重新渲染 固定写法
+            }
+        })
+
+        //选中客户姓名后，给客户编号赋值
+        // form.on('select(SUserName)', function(){
+        //
+        //     //1:拿到select对象：
+        //     var myselect=document.getElementById("SUserName");
+        //     //2：拿到选中项的索引：
+        //     var index=myselect.selectedIndex ; // selectedIndex代表的是你所选中项的index
+        //     //设置用户编号
+        //     document.getElementById("SUserId").value = myselect.options[index].value;
+        //
+        // });
+
+        //自定义表单验证规则 防止用户输入非法字符
+        form.verify({
+            SUserName:function(value){
+                if(value.length ==0){
+                    return '服务的客户没有填啊，请选择服务的客户';
+                }
+            },
+            SDate:function(value){
+                if(value.length ==0){
+                    return '服务日期不能为空啊';
+                }
+            },
+            STime:function(value){
+                if(value.length ==0){
+                    return '服务时间不能为空啊';
+                }
+            },
+            SCost: [/^[0-9]+(.[0-9]{1,2})?$/, '请输入正确的成本数最多精确到分哦'],
+            SContent:function(value){
+                if(value.length ==0){
+                    return '服务内容不能为空啊';
+                }
+            },
+            SCost: [/^[0-9]+(.[0-9]{1,2})?$/, '请输入正确的成本数最多精确到分哦'],
+        });
+
+        //修改记录表
+        form.on('submit(update)', function (data) {
+
+            /*改变获取的表单数据data.field中客户姓名select中的值为其text值即为姓名*/
+            //1:拿到select对象：
+            // var myselect=document.getElementById("SUserName");
+            // //2：拿到选中项的索引：
+            // var index=myselect.selectedIndex ; // selectedIndex代表的是你所选中项的index
+            // data.field.SUserName=myselect.options[index].text;
+
+            //给data.field增加SId数据
+            data.field.SId=$("#SId").val();
+            console.log(data.field);
+            //发送ajax请求
+            $.ajax({
+                url: "/serviceInfoManage/update",
+                type: "post",
+                data: data.field,
+                dataType: "json",//返回的数据类型
+                success: function (data) {
+                    console.log(data);
+                    if (data.info == "修改成功") {
+                        layer.msg('修改成功!', {
+                            icon: 1,
+                            time: 1000
+                        },function () {
+                            //获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                            parent.window.location.href= parent.window.location.href;
+                        });
+
+                    }
+                    else {
+                        layer.msg('修改失败', {
+                            icon: 1,
+                            time: 2000
+                        });
+                    }
+                }
+            })
+            return false;
+        });
+
+    });
+</script>

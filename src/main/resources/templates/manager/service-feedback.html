@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>客户反馈</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi">
+    <link rel="stylesheet" href="/css/font1.css">
+    <link rel="stylesheet" href="/css/xadmin1.css">
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css" media="all">
+    <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/xadmin1.js"></script>
+</head>
+<body>
+<div class="layui-fluid" id="divForm">
+    <div class="layui-row">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label for="SId" class="layui-form-label">
+                    <span class="x-red">*</span>服务编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SId" name="SId" disabled required="" lay-verify="required"
+                           th:value="${serviceInfo.SId}" autocomplete="off" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SDate" class="layui-form-label">
+                    <span class="x-red">*</span>服务日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SDate" name="SDate" disabled required="" lay-verify="required"
+                           autocomplete="off"
+                           th:value="${serviceInfo.SDate}" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SType" class="layui-form-label">
+                    <span class="x-red">*</span>服务类型</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SType" name="SType" disabled required="" lay-verify="required"
+                           th:value="${serviceInfo.SType}" autocomplete="off" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SUserName" class="layui-form-label">
+                    <span class="x-red">*</span>客户名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SUserName" name="SUserName" disabled required="" lay-verify="required"
+                           th:value="${serviceInfo.SUserName}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SManagerName" class="layui-form-label">
+                    <span class="x-red">*</span>经理名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="SManagerName" name="SManagerName" disabled required="" lay-verify="required"
+                           th:value="${serviceInfo.SManagerName}" autocomplete="off" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="SGrade" class="layui-form-label">
+                    <span class="x-red">*</span>满意度</label>
+                <div class="layui-input-inline">
+                    <select id="SGrade" name="SGrade" class="valid">
+                        <option value="很满意">很满意</option>
+                        <option value="比较满意">比较满意</option>
+                        <option value="不满意">不满意</option>
+                        <option value="很不满意">很不满意</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label for="SFback" class="layui-form-label">
+                    <span class="x-red">*</span>反馈意见</label>
+                <div class="layui-input-block">
+                    <textarea id="SFback" name="SFback" class="layui-textarea" maxlength="300" required="" lay-verify="SFback"
+                              autocomplete="off"  placeholder="请输入对本次服务建议和意见最多300字哦"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="add" class="layui-form-label"></label>
+                <button class="layui-btn" id="add" lay-filter="submit" lay-submit="">提交反馈</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<div style="display: none ;width: 60%;margin:50px auto" id="successDiv">
+    <h1 style="font-size: 45pt" id="message">感谢你花费宝贵时间提交服务反馈，你的反馈的意见已成功提交</h1>
+</div>
+</html>
+<script>
+
+    //文档加载事件 判断客户是否已经提交过反馈意见
+    $(function () {
+
+        //获取请求url
+        var thisHREF = location.href;
+        console.log(thisHREF);
+        //获取url中的Sid数据
+        var SId = thisHREF.substring(thisHREF.indexOf("=") + 1, thisHREF.length);
+        console.log(SId);
+
+        //发送ajax请求 判断是否已经提交反馈
+        $.ajax({
+            url: "/serviceInfoManage/SFbackIsSubmit",
+            type: "post",
+            data: {
+                SId:SId,
+            },
+            dataType: "json",//返回的数据类型
+            success: function (data) {
+                console.log(data);
+                if (data.info == "已经提交反馈") {
+
+                    //删除表单
+                    var divForm = document.getElementById('divForm');
+                    divForm.parentNode.removeChild(divForm);
+                    //给出提示信息
+                    var h1= document.getElementById('message');
+                    h1.innerHTML = "你已经提交过反馈意见啦";
+                    var successDiv = document.getElementById('successDiv');
+                    successDiv.style.display = "block";
+
+                }
+            }
+        })
+        return false;
+    });
+</script>
+<script>
+
+    layui.use(['form', 'upload', 'layer'], function () {
+
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+
+
+        //自定义表单验证规则 防止用户输入非法字符
+        form.verify({
+
+            SFback:function(value){
+                if(value.length ==0){
+                    return '反馈意见不能为空啊';
+                }
+            }
+
+        });
+
+        //修改记录表
+        form.on('submit(submit)', function (data) {
+
+            console.log(data.field);
+            //发送ajax请求
+            $.ajax({
+                url: "/serviceInfoManage/updateServiceInfoBack",
+                type: "post",
+                data: data.field,
+                dataType: "json",//返回的数据类型
+                success: function (data) {
+                    console.log(data);
+                    if (data.info == "更新插入客户反馈成功") {
+                        layer.msg('提交成功!', {
+                            icon: 1,
+                            time: 1000
+                        });
+                        //删除表单
+                        var divForm = document.getElementById('divForm');
+                        divForm.parentNode.removeChild(divForm);
+                        //给出提示信息
+                        var successDiv = document.getElementById('successDiv');
+                        successDiv.style.display = "block";
+                    } else {
+                        layer.msg('提交失败', {
+                            icon: 1,
+                            time: 1000
+                        });
+                    }
+                }
+            })
+            return false;
+        });
+
+    });
+</script>

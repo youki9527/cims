@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>客户生日祝福</title>
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/xadmin.js"></script>
+</head>
+<body>
+<div id="zhufu">
+    <form action="/client/zhufu">
+        <button class="layui-btn " style="margin-left: 1000px;margin-top: 20px;margin-bottom: 21px" type="button" onclick="back()"><i class="layui-icon">&#xe65c;</i>返回</button>
+    </form>
+    <div>
+        <table  class="layui-table">
+            <thead>
+            <th>生日</th>
+            <th>客户编号</th>
+            <th>客户名</th>
+            <th>客户照片</th>
+            <th>性别</th>
+            <th>电话</th>
+            <th>邮箱</th>
+            <th>学历</th>
+            <th>身份证号</th>
+            <th>备注</th>
+            <th>操作</th>
+            </thead>
+            <tbody>
+            <tr th:each="i:${clientInfoZhufu.clientListZhufu}">
+                <td th:text="${i.CBirth}"></td>
+                <td th:text="${i.CId}"></td>
+                <td th:text="${i.CName}"></td>
+                <td><img th:src="${i.CPic}" width="80" height="90"></td>
+                <td th:text="${i.CSex}"></td>
+                <td th:text="${i.CTel}"></td>
+                <td th:text="${i.CEmail}"></td>
+                <td th:text="${i.CDegree}"></td>
+                <td th:text="${i.CNo}"></td>
+                <td th:text="${i.CAdd}"></td>
+                <td>
+                    <button class="layui-btn layui-btn-normal" type="button" onclick="zhufu(this)"><i class="layui-icon">&#xe609;</i>邮件祝福</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div style="position: absolute;left: 40%;margin-top: 20px">
+        <a class="layui-btn layui-btn-sm layui-btn-primary" th:href="@{/client/zhufu(page=${clientInfoZhufu.clientPreZhufu})}" ><i class="layui-icon">&#xe603;</i>上一页</a>
+        <a class="layui-btn layui-btn-sm layui-btn-primary" th:href="@{/client/zhufu(page=${clientInfoZhufu.clientNextZhufu})}" ><i class="layui-icon">&#xe602;</i>下一页</a>
+        一共有<span th:text="${clientInfoZhufu.clientTotalZhufu}"></span>条数据
+        一共有<span th:text="${clientInfoZhufu.clientTotalPageZhufu}"></span>页
+        当前第<span th:text="${clientInfoZhufu.clientCurZhufu}"></span>页
+    </div>
+</div>
+</body>
+</html>
+
+
+<script>
+    //打开客户详情页面
+    function back(){
+       // window.location.href="/manager/list";
+        window.location.href="/client/list";
+    }
+
+    function zhufu(obj){
+
+        //获取当前选中行的CBirth值
+        var email = $(obj).parent().parent().find("td").eq(6).text();
+        var name = $(obj).parent().parent().find("td").eq(2).text();
+        var sex= $(obj).parent().parent().find("td").eq(4).text();
+        if(sex == "男"){
+            sex=name;
+            name=name + "先生";
+        }
+        else{
+            sex=name;
+            name=name + "女士";
+        }
+        var send=layer.prompt({
+            formType: 2,
+            value: '年年有今朝，岁岁乐陶陶。愿你一直保持嘴角30度的微笑弧度，永远拥有内心100度的青春热度。请感受我们120度真诚的祝福温度：生日快乐！',
+            title: '正在编辑客户'+sex+'的祝福词',
+            area: ['300px', '100px'] //自定义文本域宽高
+        }, function(value, index, elem){
+            var loading = layer.load(1, {
+                shade: false,
+                time: 2*1000
+            });
+            $.ajax({
+                url:"/client/sendEmail",
+                type:"get",
+                data:{"email":email, "name":name ,"value":value},
+                dataType:"json",
+                success:function(data){
+                    layer.close(loading);
+                    var check=layer.alert(data.info,function(){
+                        layer.close(check);
+                        layer.close(send);
+                    })
+                }
+            })
+        });
+        // layer.prompt({
+        //     formType: 2,
+        //     value: '年年有今朝，岁岁乐陶陶。愿你一直保持嘴角30度的微笑弧度，永远拥有内心100度的青春热度。请感受我们120度真诚的祝福温度：生日快乐！',
+        //     title: '正在编辑客户'+sex+'的祝福词',
+        //     area: ['300px', '100px'] //自定义文本域宽高
+        // }, function(value, index, elem){
+        //     var loading = layer.load(1, {
+        //         shade: false,
+        //         time: 2*1000
+        //     });
+        //     $.ajax({
+        //         //url:"/manager/sendEmail",
+        //         url:"/client/sendEmail",
+        //         type:"get",
+        //         data:{"email":email, "name":name ,"value":value},
+        //         dataType:"json",
+        //         success:function(data){
+        //             layer.close(loading);
+        //             layer.alert(data.info,function(){
+        //                 layer.close(check);
+        //                 layer.close(send);
+        //             })
+        //
+        //         }
+        //     })
+        // });
+
+
+    }
+</script>

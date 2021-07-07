@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>联系人管理</title>
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/xadmin.js"></script>
+</head>
+<body>
+<input type="hidden" id="conditionData" th:value="${condition}">
+<form class="x-so" action="/contact/list" id="myform">
+    <select id="condition" name="condition" style="width: 100px;height: 37px">
+        <option value="">----</option>
+        <option value="编号">编号</option>
+        <option value="客户名">客户名</option>
+    </select>
+    <input class="layui-input" name="conValue" id="conValue" th:value="${vv}" type="text" placeholder="请输入查询条件">
+    <input type="button" class="layui-btn layui-btn-normal" onclick="search()" value="查询">
+
+</form>
+
+<form action="excelWrite" >
+    <button class="layui-btn layui-btn-radius" onclick="x_admin_show('添加用户','/contact/add',500,600)" type="button"><i class="layui-icon"></i>添加</button>
+    <button class="layui-btn layui-btn-radius" style="margin-left: 10px;margin-top: 2px" type="button" onclick="zhufu()"><i class="layui-icon">&#xe606;</i>今日生日客户</button>
+</form>
+
+<table class="layui-table">
+    <thead>
+    <th>编号</th>
+    <th>客户名称</th>
+    <th>客户电话</th>
+    <th>生日</th>
+    <th>地址</th>
+    <th>性别</th>
+    <th>邮箱</th>
+    <th>操作</th>
+    </thead>
+
+    <tbody>
+    <tr th:each="i:${info.list }">
+        <td th:text = "${i.CId}"></td>
+        <td th:text = "${i.CName}"></td>
+        <td th:text = "${i.CTel}"></td>
+        <td th:text = "${i.CBirth}"></td>
+        <td th:text = "${i.CAdd}"></td>
+        <td th:text = "${i.CSex}"></td>
+        <td th:text = "${i.CEmail}"></td>
+        <td>
+            <button class="layui-btn layui-btn-normal" type="button" onclick="update(this)"><i class="layui-icon">&#xe642;</i>修改</button>
+            <button class="layui-btn layui-btn-danger layui-btn-xs" type="button" onclick="delUser(this)"><i class="layui-icon">&#xe640;</i>删除</button>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+<div style="text-align: center;">
+
+    <a class="layui-btn layui-btn-normal" th:href="@{/contact/list(page=${info.pre},conValue=${conValue},condition=${condition})}"><i class="layui-icon">&#xe603;</i>上一页</a>
+    共<span th:text="${info.totalPage}"></span>页
+    当前为第<span th:text="${info.cur}"></span>页
+    <a class="layui-btn layui-btn-normal" th:href="@{/contact/list(page=${info.next},conValue=${conValue},condition=${condition})}"><i class="layui-icon">&#xe602;</i>下一页</a>
+</div>
+<div style="text-align: center;">
+    一共有<span th:text="${info.total}"></span>数据
+</div>
+</body>
+</html>
+<script>
+    $(function () {
+        //回显查询条件的值
+        var conditionData = $("#conditionData").val();
+        $('#condition').val(conditionData);
+    })
+</script>
+<script>
+    //打开修改页面
+    function  update(obj) {
+        var id = $(obj).parent().parent().find("td").eq(0).text();
+        x_admin_show("修改","/contact/editPage?CId="+id,500,600);
+    }
+
+    //打开生日祝福页面
+    function zhufu(){
+        window.location.href="/contact/zhufu";
+    }
+
+    //删除
+    function delUser(obj) {
+        //获取当前选中行的CId值
+        var id=$(obj).parent().parent().find("td").eq(0).text();
+        //用提示框确定用户是否删除
+        layer.confirm("你确定要删除吗？",{icon:3,title:"警告"},function (index) {
+            $.ajax({
+                url:"/contact/del",
+                type:"get",
+                data: {"CId":id},
+                dataType:"json",//返回的数据类型
+                success:function (data){
+                    layer.alert(data.info)
+                    if (data.info == "删除成功"){
+                        //刷新
+                        //parent.window.location.href=parent.window.location.href;
+                        //第二种刷新
+                        $(obj).parent().parent().remove();
+                    }
+                }
+            })
+        })
+    }
+    //查询验证
+    function search(){
+        //获取用户输入的查询条件
+        var v = $("#conValue").val();
+        //获取用户选择的查询
+        var con = $("#condition").val();
+        //判断用户选择的查询条件
+        if(con=="编号"){
+            //创建一个正则表达式对象
+            var re = /^[0-9]*$/;
+            //验证用户输入的信息是否是数字
+            if(re.test(v)){
+                //用js做表单提交
+                document.getElementById("myform").submit();
+            }else{
+                layer.alert("请输入数字")
+            }
+
+        }else{
+            //用js做表单提交
+            document.getElementById("myform").submit();
+        }
+    }
+</script>

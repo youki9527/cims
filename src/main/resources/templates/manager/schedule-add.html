@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>日程添加</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi">
+    <link rel="stylesheet" href="/css/font1.css">
+    <link rel="stylesheet" href="/css/xadmin1.css">
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css" media="all">
+    <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/xadmin1.js"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label for="ScheduleDate" class="layui-form-label">
+                    <span class="x-red">*</span>服务日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ScheduleDate" name="ScheduleDate" required="" lay-verify="ScheduleDate"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="ScheduleTime" class="layui-form-label">
+                    <span class="x-red">*</span>服务时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ScheduleTime" name="ScheduleTime" required="" lay-verify="ScheduleTime"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="ScheduleUserName" class="layui-form-label">
+                    <span class="x-red">*</span>客户名称</label>
+                <div class="layui-input-inline">
+                    <select id="ScheduleUserName" name="ScheduleUserName" required="" lay-verify="ScheduleUserName"
+                            lay-filter="ScheduleUserName" autocomplete="off" lay-search>
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>如果没有请先到联系人页面添加客户信息
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="ScheduleUserId" class="layui-form-label">
+                    <span class="x-red">*</span>客户编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ScheduleUserId" name="ScheduleUserId" disabled required=""
+                           lay-verify="required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="ScheduleUPNumber" class="layui-form-label">
+                    <span class="x-red">*</span>客户电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ScheduleUPNumber" name="ScheduleUPNumber" required=""
+                           lay-verify="ScheduleUPNumber"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="ScheduleUaddress" class="layui-form-label">
+                    <span class="x-red">*</span>客户地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ScheduleUaddress" name="ScheduleUaddress" required=""
+                           lay-verify="ScheduleUaddress"
+                           autocomplete="off" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="ScheduleMName" class="layui-form-label">
+                    <span class="x-red">*</span>经理名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ScheduleMName" name="ScheduleMName" disabled required=""
+                           lay-verify="required"
+                           autocomplete="off" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="ScheduleMId" class="layui-form-label">
+                    <span class="x-red">*</span>经理编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ScheduleMId" name="ScheduleMId" disabled required="" lay-verify="required"
+                           autocomplete="off" class="layui-input"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="ScheduleSType" class="layui-form-label">
+                    <span class="x-red">*</span>服务类型</label>
+                <div class="layui-input-inline">
+                    <select id="ScheduleSType" name="ScheduleSType" class="valid">
+                        <option value="上门服务">上门服务</option>
+                        <option value="解决客户投诉">解决客户投诉</option>
+                        <option value="客户培训">客户培训</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="add" class="layui-form-label"></label>
+                <button class="layui-btn" id="add" lay-filter="add" lay-submit="">增加</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+<script>
+
+    //设置用户填写日期和时间样式
+    layui.use('laydate', function () {
+        var laydate1 = layui.laydate;
+        var laydate2 = layui.laydate;
+        //执行一个laydate实例
+        laydate1.render({
+            elem: '#ScheduleDate' //指定元素
+        });
+        laydate2.render({
+            elem: '#ScheduleTime',//指定元素
+            type: 'time',
+        });
+    });
+
+    //客户信息
+    var clientDate;
+    layui.use(['form', 'upload', 'layer'], function () {
+
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+
+        //初始化添加服务记录页面
+        $.ajax({
+            url: "/serviceInfoManage/addInitialize",
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                clientDate = data.clientInfoList;
+                console.log(data);
+                //加载经理信息
+                document.getElementById("ScheduleMName").value = data.managerInfo.mname;
+                document.getElementById("ScheduleMId").value = data.managerInfo.mid;
+                //加载经理负责客户信息
+                $.each(data.clientInfoList, function (index, value) {
+                    $('#ScheduleUserName').append(new Option(value.cname, value.cid));  //下拉菜单里第一个为text 第二个为value
+                });
+                layui.form.render("select");//重新渲染 固定写法
+            }
+        });
+
+        //选中客户姓名后，给客户编号赋值
+        form.on('select(ScheduleUserName)', function () {
+
+            //1:拿到select对象：
+            var myselect = document.getElementById("ScheduleUserName");
+            //2：拿到选中项的索引：
+            var index = myselect.selectedIndex; // selectedIndex代表的是你所选中项的index
+            //3:拿到选中项options的text：
+            console.log(myselect.options[index].text);
+            //4:拿到选中项options的value：
+            console.log(111111 + myselect.options[index].value);
+            //设置用户编号
+            document.getElementById("ScheduleUserId").value = myselect.options[index].value;
+            document.getElementById("ScheduleUPNumber").value = clientDate[index].ctel;
+            document.getElementById("ScheduleUaddress").value = clientDate[index].cadd;
+        });
+
+        //自定义表单验证规则 防止用户输入非法字符
+        form.verify({
+
+            ScheduleUserName: function (value) {
+                if (value.length == 0) {
+                    return '服务的客户没有填啊，请选择服务的客户';
+                }
+            },
+            ScheduleDate: function (value) {
+                if (value.length == 0) {
+                    return '服务日期不能为空啊';
+                }
+            },
+            ScheduleTime: function (value) {
+                if (value.length == 0) {
+                    return '服务时间不能为空啊';
+                }
+            },
+        });
+
+        //添加记录表
+        form.on('submit(add)', function (data) {
+
+            console.log(data);
+            /*改变获取的表单数据data.field中客户姓名select中的值为其text值即为姓名*/
+            //1:拿到select对象：
+            var myselect = document.getElementById("ScheduleUserName");
+            //2：拿到选中项的索引：
+            var index = myselect.selectedIndex; // selectedIndex代表的是你所选中项的index
+            data.field.ScheduleUserName = myselect.options[index].text;
+
+            var SDateAndTime = data.field.ScheduleDate + " " + data.field.ScheduleTime;
+            console.log("日程时间"+SDateAndTime);
+
+            function getNowFormatDate() {
+                var date = new Date();
+                var seperator1 = "-";                 //设置成自己想要的日期格式 年/月/日
+                var seperator2 = ":";                 //设置成自己想要的时间格式 时:分:秒
+                var month = date.getMonth() + 1;      //月
+                var strDate = date.getDate();         //日
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                //设置时间格式
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+                return currentdate;
+            }
+            var time = getNowFormatDate();
+            console.log("现在时间"+time);
+
+            if (SDateAndTime < time) {
+                layer.alert("日程时间不能小于现在时间啊，你总不会给过去制定计划啊");
+                return false;
+            } else {
+                //发送ajax请求
+                $.ajax({
+                    url: "/schedule/add",
+                    type: "post",
+                    data: data.field,
+                    dataType: "json",//返回的数据类型
+                    success: function (data) {
+                        console.log(data);
+                        if (data.info == "添加成功") {
+                            //获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            layer.msg('添加成功!', {
+                                icon: 1,
+                                time: 2000
+                            },function () {
+                                //关闭当前frame
+                                //setTimeout(,3000);
+                                parent.window.location.href = parent.window.location.href
+                                parent.layer.close(index);
+                            });
+
+                        } else {
+                            layer.msg('添加失败', {
+                                icon: 1,
+                                time: 1000
+                            });
+                        }
+                    }
+                })
+                return false;
+            }
+        });
+
+    });
+</script>

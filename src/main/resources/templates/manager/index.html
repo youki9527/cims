@@ -1,0 +1,289 @@
+<!doctype html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>后台登录客户经理首页</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="stylesheet" href="/css/font1.css">
+    <link rel="stylesheet" href="/css/xadmin1.css">
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css" media="all">
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/xadmin1.js"></script>
+    <style>
+        /*.layui-this{*/
+        /*    background-color: #00F7DE!important;*/
+        /*}*/
+    </style>
+</head>
+<body class="index">
+<!-- 顶部开始 -->
+<div class="container">
+    <div class="logo">
+        <a href="index.html">保险销售客户经理系统</a>
+    </div>
+    <div class="left_open">
+        <a>
+            <i title="展开左侧栏" class="iconfont">&#xe699;</i>
+        </a>
+    </div>
+    <!--    <ul class="layui-nav left fast-add" lay-filter="">-->
+    <!--        <li class="layui-nav-item">-->
+    <!--            <a href="javascript:;">+新增</a>-->
+    <!--            <dl class="layui-nav-child">-->
+    <!--                &lt;!&ndash; 二级菜单 &ndash;&gt;-->
+    <!--                <dd>-->
+    <!--                    <a onclick="xadmin.open('最大化','http://www.baidu.com','','',true)">-->
+    <!--                        <i class="iconfont">&#xe6a2;</i>弹出最大化</a></dd>-->
+    <!--                <dd>-->
+    <!--                    <a onclick="xadmin.open('弹出自动宽高','http://www.baidu.com')">-->
+    <!--                        <i class="iconfont">&#xe6a8;</i>弹出自动宽高</a></dd>-->
+    <!--                <dd>-->
+    <!--                    <a onclick="xadmin.open('弹出指定宽高','http://www.baidu.com',500,300)">-->
+    <!--                        <i class="iconfont">&#xe6a8;</i>弹出指定宽高</a></dd>-->
+    <!--                <dd>-->
+    <!--                    <a onclick="xadmin.add_tab('在tab打开','member-list.html')">-->
+    <!--                        <i class="iconfont">&#xe6b8;</i>在tab打开</a></dd>-->
+    <!--                <dd>-->
+    <!--                    <a onclick="xadmin.add_tab('在tab打开刷新','member-del.html',true)">-->
+    <!--                        <i class="iconfont">&#xe6b8;</i>在tab打开刷新</a></dd>-->
+    <!--            </dl>-->
+    <!--        </li>-->
+    <!--    </ul>-->
+    <ul class="layui-nav right" lay-filter="">
+        <li class="layui-nav-item">
+            <a href="javascript:;">
+                <img id="head" th:src="${session.manager.MPic}" width="50px" height="30px">
+                <span th:text="${session.manager.MLogin}"></span>
+            </a>
+            <dl class="layui-nav-child">
+                <!-- 二级菜单 -->
+                <dd>
+                    <a onclick="xadmin.open('个人信息','/indexM/managerInfo')">个人信息</a></dd>
+                <dd>
+                <dd>
+                    <a onclick="xadmin.open('修改密码','/indexM/updatePwd')">修改密码</a></dd>
+                <!--                <dd>-->
+                <!--                    <a onclick="xadmin.open('切换帐号','http://www.baidu.com')">切换帐号</a></dd>-->
+                <dd>
+                    <a href="/login/loginPage">退出</a></dd>
+            </dl>-
+        </li>
+    </ul>
+</div>
+<!-- 顶部结束 -->
+<!-- 中部开始 -->
+<!-- 左侧菜单开始 -->
+<div class="left-nav">
+    <div id="side-nav">
+        <ul id="nav">
+            <li>
+                <a href="javascript:;">
+                    <!--                    <a onclick="xadmin.add_tab('服务记录列表','/serviceInfoManage/serviceList')">-->
+                    <i class="iconfont left-nav-li" lay-tips="订单管理">&#xe723;</i>
+                    <cite>服务记录管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a onclick="xadmin.add_tab('服务记录列表','/serviceInfoManage/serviceList')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>服务记录列表</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <!--                <a onclick="xadmin.add_tab('日程记录列表','/schedule/scheduleList')">-->
+                    <i class="iconfont left-nav-li" lay-tips="订单管理">&#xe723;</i>
+                    <cite>日程管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a onclick="xadmin.add_tab('日程记录列表','/schedule/scheduleList')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>日程列表</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <!--                <a onclick="xadmin.add_tab('联系人列表','/contact/list')">-->
+                <a href="javascript:;">
+                    <i class="iconfont left-nav-li" lay-tips="联系人管理">&#xe6b8;</i>
+                    <cite>联系人管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a onclick="xadmin.add_tab('联系人列表','/contact/list')">
+
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>联系人列表</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <!--            <li>-->
+            <!--                <a href="javascript:;">-->
+            <!--                    <i class="iconfont left-nav-li" lay-tips="客户关怀">&#xe6b8;</i>-->
+            <!--                    <cite>客户关怀</cite>-->
+            <!--                    <i class="iconfont nav_right">&#xe697;</i></a>-->
+            <!--                <ul class="sub-menu">-->
+            <!--                    <li>-->
+            <!--                        <a onclick="xadmin.add_tab('客户列表','/clientZhuFu/list')">-->
+            <!--                            <i class="iconfont">&#xe6a7;</i>-->
+            <!--                            <cite>客户关怀列表</cite></a>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </li>-->
+        </ul>
+    </div>
+</div>
+<!-- <div class="x-slide_left"></div> -->
+<!-- 左侧菜单结束 -->
+<!-- 右侧主体开始 -->
+<button data-method="offset" data-type="rt" class="layui-btn layui-btn-normal">右上弹出</button>
+<div class="page-content">
+    <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+        <ul class="layui-tab-title">
+           - <li class="home">
+                <i class="layui-icon">&#xe68e;</i>我的桌面
+            </li>
+        </ul>
+<!--        <div class="layui-unselect layui-form-select layui-form-selected" id="tab_right">-->
+<!--            <dl>-->
+<!--                <dd data-type="this">关闭当前</dd>-->
+<!--                <dd data-type="other">关闭其它</dd>-->
+<!--                <dd data-type="all">关闭全部</dd>-->
+<!--            </dl>-->
+<!--        </div>-->
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe src='/indexM/welcome' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+            </div>
+        </div>
+        <div id="tab_show"></div>
+    </div>
+</div>
+<div class="page-content-bg"></div>
+</body>
+<!--提示框内容-->
+<div id="datemessage" style="display: none">
+    <div id="indate">
+    </div>
+    <div id="outdate">
+
+    </div>
+</div>
+</html>
+<script>
+
+    //事件
+    function load() {
+
+        layui.use('layer', function () { //独立版的layer无需执行这一句
+            var $ = layui.jquery,
+                layer = layui.layer; //独立版的layer无需执行这一句
+
+            //弹窗
+            layer.open({
+                title: '日程提醒',
+                type: 1
+                , offset: 'auto'
+                , id: 'layerDemo' + 'auto' //防止重复弹出
+                , content: $('#datemessage')
+                , btn: '好的 我知道啦'
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+                , yes: function () {
+                    layer.closeAll();
+                }
+            });
+
+            $('#layerDemo .layui-btn').on('click', function () {
+                var othis = $(this), method = othis.data('method');
+                active[method] ? active[method].call(this, othis) : '';
+            });
+
+        });
+    }
+
+    var websocket = null;
+
+    //判断当前浏览器是否支持WebSocket
+    if ('WebSocket' in window) {
+        websocket = new WebSocket("ws://localhost:8080/websocket");
+    } else {
+        alert('Not support websocket')
+    }
+
+    //连接发生错误的回调方法
+    websocket.onerror = function () {
+        setMessageInnerHTML("error");
+    };
+
+    //连接成功建立的回调方法
+    websocket.onopen = function (event) {
+        setMessageInnerHTML("open");
+    }
+
+    //连接关闭的回调方法
+    websocket.onclose = function () {
+        setMessageInnerHTML("close");
+    }
+
+    //接收到消息的回调方法
+    websocket.onmessage = function (event) {
+
+        console.log("接收到消息的回调数据" + event.data);
+        var model = event.data;
+
+        model = JSON.parse(model);//这里把字符串转为json.
+        console.log(model);
+        //创建两个个拼接字符串的变量
+        var indatehtml = "";
+        var outdatehtml = "";
+        for (i = 0; i < model.OutDateText.length; i++) {
+            outdatehtml += "<p>" + model.OutDateText[i] + "</p>"
+        }
+        for (j = 0; j < model.InDateText.length; j++) {
+            indatehtml += "<p>" + model.InDateText[j] + "</p>"
+        }
+
+        //把indatehtml加载到div
+        $("#indate").html(indatehtml);
+        //把indatehtml加载到div
+        $("#outdate").html(outdatehtml);
+        load();
+    }
+
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function () {
+        websocket.close();
+    }
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+    }
+
+    //关闭连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+
+    //发送消息
+    function send() {
+        var message = document.getElementById('text').value;
+        websocket.send(message);
+    }
+</script>
