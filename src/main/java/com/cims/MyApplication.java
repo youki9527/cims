@@ -5,8 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MyApplication {
-    //定义一个启动方法
-    public static void main(String[] args) {
-        SpringApplication.run(MyApplication.class, args);
-    }
+
+	//定义一个启动方法
+	public static void main(String[] args) {
+		System.out.println("111111111");
+		SpringApplication.run(MyApplication.class, args);
+	}
 }
