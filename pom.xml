@@ -58,6 +58,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <!--mysql数据库依赖-->
         <dependency>
             <groupId>mysql</groupId>
